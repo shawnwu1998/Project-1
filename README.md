@@ -52,7 +52,7 @@ public class Connect4 {
 			 break;
 		 }
 	 }
-  //ll
+  
  }
  public void ActionO(int column) {
 	 System.out.println("Player 2's turn");
@@ -94,7 +94,7 @@ public class Connect4 {
   System.out.println("2. Standard 6X7X4 Connect-Four");
   int x=scan.nextInt();
 //  System.out.println("colomn");
-// hell0
+
   
   if(x==1) {
    Connect4 game= new Connect4(3,3);
