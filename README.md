@@ -52,7 +52,7 @@ public class Connect4 {
 			 break;
 		 }
 	 }
-  
+  //ll
  }
  public void ActionO(int column) {
 	 System.out.println("Player 2's turn");
