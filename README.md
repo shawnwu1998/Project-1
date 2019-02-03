@@ -108,9 +108,65 @@ public class Connect4 {
 
 	}
 
-	public void checkFinish(int win) {
-		
+	public int checkFinish() {
+//		int AIScore=0; 
+//		int humanScore=0;
+	//	int x=0;
+		for(int i=2; i>=0;i--) {
+			for(int j=0; j<=2; j++) {
+				if(board[i][j]=='.') {
+					continue;
+				}
+				//check right
+				if(j<=2) {
+					for(int x=0; x<3;x++) {
+						if(board[i][x]=='O') {
+							return 2;
+						}else if(board[i][x]=='X') {
+							return 1;
+						}else {
+							break;
+						}
+					}
+				}
+				//check up
+				if(i>=2) {
+					for(int x=0;x<3;x++) {
+						if(board[x][j]=='O') {
+							return 2;
+						}else if(board[x][j]=='X') {
+							return 1;
+						}
+					}
+				}
+				//check diagonal right
+				if(j<=2 && i<=2) {
+					for(int x=0; x<2;x++) {
+						if(board[i-x][j+x]=='O') {
+							return 2;
+						}else if(board[i-x][j+x]=='X') {
+							return 1;
+						}
+					}
+				}
+				
+				//check diagonal left
+				if(j<=2 && i<=2) {
+					for(int x=0; x<2;x++) {
+						if(board[i-x][j-x]=='O') {
+							return 2;
+						}else if(board[i-x][j-x]=='X') {
+							return 1;
+						}
+					}
+				}
+			}
+		}
+		return 0;
+
+
 	}
+
 
 	public static void main(String[] args) {
 		Scanner scan= new Scanner(System.in);
@@ -147,6 +203,16 @@ public class Connect4 {
 				System.out.println("2's col");
 				game.randomAction();
 				game.printboard();
+				
+			}
+			int r=game.checkFinish();
+			if(r==1) {
+				System.out.println("Player 2 wins");
+			}else if(r==2) {
+				System.out.println("Player 1 wins");
+			}else if(r==0) {
+				System.out.println("draw");
+			
 			}
 		}
 
