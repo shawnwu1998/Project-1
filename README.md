@@ -109,9 +109,7 @@ public class Connect4 {
 	}
 
 	public int checkFinish() {
-//		int AIScore=0; 
-//		int humanScore=0;
-	//	int x=0;
+	
 		for(int i=2; i>=0;i--) {
 			for(int j=0; j<=2; j++) {
 				if(board[i][j]=='.') {
