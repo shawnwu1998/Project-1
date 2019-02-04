@@ -33,6 +33,8 @@ public class Connect4 {
 		}
 		System.out.println("---------------------"); 
 	}
+	
+	Scanner sc= new Scanner(System.in);
 
 	public void Action(int column) {
 		System.out.println("Player 1's turn");
@@ -43,6 +45,9 @@ public class Connect4 {
 				break;
 			}else if(board[0][column]!='.') {
 				System.out.println("This column is full, try again");
+				System.out.println("Player 1 try again");
+				int r=sc.nextInt();
+				Action(r);
 				break;
 			}if((board[bottomrow][column]=='X' || board[bottomrow][column]=='O') && board[bottomrow-1][column]=='.') {
 				board[bottomrow-1][column]='X';
@@ -174,7 +179,100 @@ public class Connect4 {
 
 			}
 			for(int j=0;j<3;j++){
-				//Game has not ended yet
+				if(board[0][j]=='.') {
+					return -1;
+				}
+			}
+		}
+
+		return 0;
+
+
+	}
+	public int checkFinish2() {
+		int AIs = 0;
+		int Humans=0;
+		for(int i=5; i>=0;i--) {
+			for(int j=0; j<=6; j++) {
+				if(board[i][j]=='.') {
+					continue;
+				}
+				//check right
+				if(j<=3) {
+					for(int x=0; x<7;x++) {
+						if(board[i][x]=='O') {
+							AIs++;
+						}else if(board[i][x]=='X') {
+							Humans++;
+						}else {
+							break;
+						}
+					}
+					if(AIs==4) {
+						return 1;
+					}else if(Humans==4) {
+						return 2;
+					}
+					AIs=0; Humans=0;
+				}
+
+
+				//check up
+				if(i>=3) {
+					for(int x=0;x<6;x++) {
+						if(board[x][j]=='O') {
+							AIs++;
+						}else if(board[x][j]=='X') {
+							Humans++;
+						}else {
+							break;
+						}
+					}
+					if(AIs==4) {
+						return 1;
+					}else if(Humans==4) {
+						return 2;
+					}
+					AIs=0; Humans=0;
+				}
+
+
+				//	check diagonal right
+				if(j<=3 && i>=3) {
+					for(int x=0; x<4;x++) {
+						if(board[i-x][j+x]=='O') {
+							AIs++;
+						}else if(board[i-x][j+x]=='X') {
+							Humans++;
+						}
+					}
+					if(AIs==4) {
+						return 1;
+					}else if(Humans==4) {
+						return 2;
+					}
+					AIs=0; Humans=0;	
+				}
+
+				//check diagonal left
+				if(j>=3 && i>=3) {
+					for(int x=0; x<4;x++) {
+						if(board[i-x][j-x]=='O') {
+							AIs++;
+						}else if(board[i-x][j-x]=='X') {
+							Humans++;
+						}
+					}
+					if(AIs==4) {
+						return 1;
+					}else if(Humans==4) {
+						return 2;
+					}
+					AIs=0; Humans=0;
+				}
+
+			}
+			for(int j=0;j<7;j++){
 				if(board[0][j]=='.') {
 					return -1;
 				}
@@ -213,17 +311,6 @@ public class Connect4 {
 				int y=scan.nextInt();
 				game.Action(y);
 				game.printboard();
-
-
-				//because Player 1 makes the 9th step and ends the game
-				if(count==9) {
-					System.out.println("Over");
-					break;
-				}
-
-				System.out.println("2's col");
-				game.randomAction();
-				game.printboard();
 				int r=game.checkFinish();
 				if(r==1) {
 					System.out.println("Player 2 wins");
@@ -231,10 +318,23 @@ public class Connect4 {
 				}else if(r==2) {
 					System.out.println("Player 1 wins");
 					break;
-				}else if(r==0) {
-					System.out.println("draw");
+				}else if(count==9) {
+					System.out.println("It's a Tie!");
 					break;
+				}
+				//because Player 1 makes the 9th step and ends the game
+				
 
+				System.out.println("2's col");
+				game.randomAction();
+				game.printboard();
+				int r1=game.checkFinish();
+				if(r1==1) {
+					System.out.println("Player 2 wins");
+					break;
+				}else if(r1==2) {
+					System.out.println("Player 1 wins");
+					break;
 				}
 
 			}
@@ -258,6 +358,14 @@ public class Connect4 {
 				System.out.println("2's col");
 				game.randomAction();
 				game.printboard();
+				int r=game.checkFinish2();
+				if(r==1) {
+					System.out.println("Player 2 wins");
+					break;
+				}else if(r==2) {
+					System.out.println("Player 1 wins");
+					break;
+				}
 
 			}
 		}
