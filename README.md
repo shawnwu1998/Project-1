@@ -92,71 +92,98 @@ public class Connect4 {
 	}
 
 	public static int minimaxab (char board[][], int player) {
-		System.out.println("yes");
-		if(checkFinish()==1 || checkFinish()==-1) {
-			System.out.println("yes11");
-			return checkFinish();
+		//System.out.println("yes");
+		if(checkFinish()==1) {
+			return 1;
 		}
-		
+		if(checkFinish()==-1) {
+			return -1;
+		}
+		if(count==9) {
+			return 0;
+		}
+
 		if(player==1) {
-			System.out.println("ha");
+			//System.out.println("yes1");
 			int bestMax=Integer.MIN_VALUE;
 			//store all actions 
 			for(int i=0; i<=2; i++) {
-				if(count<9) {
+				//System.out.println("yes2");
+				if(isRowAvailable(board, i)) {
+					//System.out.println("yes3");
 					board=drop(i, 'X');
-					printboard();
-					System.out.println("board0  "+"bestMax  "+bestMax+"  i "+i);
+					//printboard();
+					//System.out.println("board0  "+"bestMax  "+bestMax+"  i "+i);
 					bestMax = Math.max(minimaxab(board,-1), bestMax);
 					board = removeCoin(board, i);
 				}
-			}return bestMax;
-
+			}
+			return bestMax;
 		}else{
+			//System.out.println("yes11");
 			int bestMIN=Integer.MAX_VALUE;
-			System.out.println("haha");
 			for(int i=0; i<=2; i++) {
-				if(count<9) {
+				//System.out.println("yes22");
+				if(isRowAvailable(board, i)) {
+					//System.out.println("yes33");
 					board=drop(i,'O');
-					printboard();
-					System.out.println("board1  "+"bestMIN  "+bestMIN+"  i "+i);
+					//printboard();
+					//System.out.println("board1  "+"bestMIN  "+bestMIN+"  i "+i);
 					bestMIN = Math.min(minimaxab(board,1), bestMIN);
 					board = removeCoin(board, i);
 				}
-			}return bestMIN;
+			}
+			return bestMIN;
+		}
+	}
+
+	public static boolean isRowAvailable(char board[][],int k){
+		if(k < 0 || k >= board[0].length)
+			return false;
+
+		for(int i = 0 ; i < board.length ; i ++){
+			if(board[i][k] == '.')
+				return true;
 
 		}
+		return false;
+	}
 
+	public static char[][] drop(int column, char player) {
 
+		for(int i = board.length - 1 ; i >= 0 ; i--){
+			//System.out.println(i);
+			if(board[i][column] == '.'){
+				board[i][column] = player;
+				break;
+			}
+		}
+		return board;
 
 	}
 
-	
-	public static char[][] drop(int column, char player) {
+	public static void action1(int column) {
 		for(int i=row-1; i>0;i--) {
 			if(board[i][column]=='.') {
-				board[i][column]=player;
+				board[i][column]='O';
 				break;
 			}else if((board[i][column]=='X' || board[i][column]=='O') && board[i-1][column]=='.') {
-				board[i-1][column]=player;
+				board[i-1][column]='O';
 				break;
 			}
 		}
-		return board;
-
 	}
 
-	public static char[][] removeCoin(char board[][],int row){
-		System.out.println("...");
+	public static char[][] removeCoin(char board[][],int k){
 		for(int i = 0 ; i < board.length ; i++){
-			if(board[i][row] != '.'){
-				board[i][row] = '.';
+			if(board[i][k] != '.'){
+				board[i][k] = '.';
 				break;
 			}
 		}
 		return board;
 	}
-	
+
 	public static int checkFinish() {
 		int AIs = 0;
 		int Humans=0;
@@ -257,7 +284,7 @@ public class Connect4 {
 
 	}
 
-	
+
 	public static int checkFinish2() {
 		int AIs = 0;
 		int Humans=0;
@@ -349,7 +376,7 @@ public class Connect4 {
 
 	}
 
-	
+
 	public static void play() {
 
 		while(true) {
@@ -387,7 +414,7 @@ public class Connect4 {
 		}
 	}
 
-	
+
 	public static void play2() {
 
 		while(true) {
@@ -424,7 +451,7 @@ public class Connect4 {
 		}
 	}
 
-	
+
 	public static void play3() {
 
 		while(true) {
@@ -445,8 +472,8 @@ public class Connect4 {
 				break;
 			}
 			System.out.println("2's col");
-
-			minimaxab(board, -1);
+			//这边我随便写的，不能这么写
+			action1(minimaxab(board, 1));
 			printboard();
 			int r2=checkFinish();
 			if(r2==1) {
