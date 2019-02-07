@@ -56,8 +56,6 @@ public class Connect4 {
 
 	}
 
-	
-
 	//random player
 	public static void randomAction() {
 
@@ -92,18 +90,73 @@ public class Connect4 {
 
 
 	}
+
+	public static int minimaxab (char board[][], int player) {
+		System.out.println("yes");
+		if(checkFinish()==1 || checkFinish()==-1) {
+			System.out.println("yes11");
+			return checkFinish();
+		}
+		
+		if(player==1) {
+			System.out.println("ha");
+			int bestMax=Integer.MIN_VALUE;
+			//store all actions 
+			for(int i=0; i<=2; i++) {
+				if(count<9) {
+					board=drop(i, 'X');
+					printboard();
+					System.out.println("board0  "+"bestMax  "+bestMax+"  i "+i);
+					bestMax = Math.max(minimaxab(board,-1), bestMax);
+					board = removeCoin(board, i);
+				}
+			}return bestMax;
+
+		}else{
+			int bestMIN=Integer.MAX_VALUE;
+			System.out.println("haha");
+			for(int i=0; i<=2; i++) {
+				if(count<9) {
+					board=drop(i,'O');
+					printboard();
+					System.out.println("board1  "+"bestMIN  "+bestMIN+"  i "+i);
+					bestMIN = Math.min(minimaxab(board,1), bestMIN);
+					board = removeCoin(board, i);
+				}
+			}return bestMIN;
+
+		}
+
+
+
+	}
+
 	
-	public static char[][] drop(int column) {
-		for(int i=row-1; i>=0;i--) {
+	public static char[][] drop(int column, char player) {
+		for(int i=row-1; i>0;i--) {
 			if(board[i][column]=='.') {
-				board[i][column]='O';
+				board[i][column]=player;
+				break;
+			}else if((board[i][column]=='X' || board[i][column]=='O') && board[i-1][column]=='.') {
+				board[i-1][column]=player;
 				break;
 			}
 		}
 		return board;
-		
+
 	}
 
+	public static char[][] removeCoin(char board[][],int row){
+		System.out.println("...");
+		for(int i = 0 ; i < board.length ; i++){
+			if(board[i][row] != '.'){
+				board[i][row] = '.';
+				break;
+			}
+		}
+		return board;
+	}
+	
 	public static int checkFinish() {
 		int AIs = 0;
 		int Humans=0;
@@ -126,9 +179,9 @@ public class Connect4 {
 					}
 
 					if(AIs==3) {
-						return 1;
+						return -1;
 					}else if(Humans==3) {
-						return 2;
+						return 1;
 					}
 
 					AIs=0; Humans=0;
@@ -146,9 +199,9 @@ public class Connect4 {
 					}
 
 					if(AIs==3) {
-						return 1;
+						return -1;
 					}else if(Humans==3) {
-						return 2;
+						return 1;
 					}
 					AIs=0; Humans=0;
 				}
@@ -165,9 +218,9 @@ public class Connect4 {
 						}
 					}
 					if(AIs==3) {
-						return 1;
+						return -1;
 					}else if(Humans==3) {
-						return 2;
+						return 1;
 					}
 					AIs=0; Humans=0;	
 				}
@@ -182,9 +235,9 @@ public class Connect4 {
 						}
 					}
 					if(AIs==3) {
-						return 1;
+						return -1;
 					}else if(Humans==3) {
-						return 2;
+						return 1;
 					}
 					AIs=0; Humans=0;
 				}
@@ -196,7 +249,7 @@ public class Connect4 {
 		for(int j=0;j<3;j++){
 			//Game has not ended yet
 			if(board[0][j]=='.') {
-				return -1;
+				return 0;
 			}
 		}
 
@@ -204,7 +257,7 @@ public class Connect4 {
 
 	}
 
-
+	
 	public static int checkFinish2() {
 		int AIs = 0;
 		int Humans=0;
@@ -296,10 +349,9 @@ public class Connect4 {
 
 	}
 
-
 	
 	public static void play() {
-		
+
 		while(true) {
 			System.out.println("player 1's col");
 			int y=scan.nextInt();
@@ -318,7 +370,7 @@ public class Connect4 {
 				break;
 			}
 			System.out.println("2's col");
-			
+
 			randomAction();
 			printboard();
 			int r2=checkFinish();
@@ -334,9 +386,10 @@ public class Connect4 {
 			}
 		}
 	}
+
 	
 	public static void play2() {
-		
+
 		while(true) {
 			System.out.println("player 1's col");
 			int y=scan.nextInt();
@@ -370,6 +423,45 @@ public class Connect4 {
 			}
 		}
 	}
+
+	
+	public static void play3() {
+
+		while(true) {
+			System.out.println("player 1's col");
+			int y=scan.nextInt();
+			Action(y);
+			printboard();
+			checkFinish();
+			int r=checkFinish();
+			if(r==1) {
+				System.out.println("Player 2 wins");
+				break;
+			}else if(r==2) {
+				System.out.println("Player 1 wins");
+				break;
+			}else if(count==9) {
+				System.out.println("It's a Tie!");
+				break;
+			}
+			System.out.println("2's col");
+
+			minimaxab(board, -1);
+			printboard();
+			int r2=checkFinish();
+			if(r2==1) {
+				System.out.println("Player 2 wins");
+				break;
+			}else if(r2==2) {
+				System.out.println("Player 1 wins");
+				break;
+			}else if(count==9) {
+				System.out.println("It's a Tie!");
+				break;
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		Scanner scan= new Scanner(System.in);
 		System.out.println("Please choose your game");
@@ -379,29 +471,33 @@ public class Connect4 {
 		int boardSize=scan.nextInt();
 
 		System.out.println("Choose your opponent:");
-		System.out.println("0.测试"+
-				"1. An agent that plays randomly\n" + 
+		System.out.println("1. An agent that plays randomly\n" + 
 				"2. An agent that uses MINIMAX\n" + 
 				"3. An agent that uses MINIMAX with alpha-beta pruning\n" + 
 				"4. An agent that uses H-MINIMAX with a fixed depth cutoff");
 		System.out.println("Your choice?");
 		int opponent =scan.nextInt();
 
-		//play Random on Tiny board 3*3人机
+		//play Random on board 3*3
 		if(boardSize==1 && opponent==1) {
 			Connect4 game= new Connect4(3,3);
 			game.printboard();
 			game.play();
 		}
 
-		if(boardSize==2 && opponent==1) {//6*7人机
+		//play  minimax on board 3*3
+		if(boardSize==1 && opponent==2) {
+			Connect4 game= new Connect4(3,3);
+			game.printboard();
+			game.play3();
+		}
+
+		//play Random on board 6*7
+		if(boardSize==2 && opponent==1) {
 			Connect4 game= new Connect4(6,7);
 			game.printboard();
 			game.play2();
 		}
-
-		
-
 
 	}
 }
