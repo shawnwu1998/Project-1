@@ -34,7 +34,7 @@ public class Connect4 {
 
 
 	public static void Action(int column) {
-		System.out.println("Player 1's board");
+
 		for(int bottomrow =row-1;bottomrow>0;bottomrow--){
 			if(board[bottomrow][column]=='.') {
 				board[bottomrow][column]='X';
@@ -55,6 +55,8 @@ public class Connect4 {
 		}
 
 	}
+
+
 
 	//random player
 	public static void randomAction() {
@@ -93,12 +95,8 @@ public class Connect4 {
 
 	public static int minimaxab (char board[][], int player) {
 		//System.out.println("yes");
-		if(checkFinish()==1) {
-			return 1;
-		}
-		if(checkFinish()==-1) {
-			return -1;
-		}
+		utility();
+
 		if(count==9) {
 			return 0;
 		}
@@ -162,18 +160,6 @@ public class Connect4 {
 
 	}
 
-	public static void action1(int column) {
-		for(int i=row-1; i>0;i--) {
-			if(board[i][column]=='.') {
-				board[i][column]='O';
-				break;
-			}else if((board[i][column]=='X' || board[i][column]=='O') && board[i-1][column]=='.') {
-				board[i-1][column]='O';
-				break;
-			}
-		}
-	}
-
 	public static char[][] removeCoin(char board[][],int k){
 		for(int i = 0 ; i < board.length ; i++){
 			if(board[i][k] != '.'){
@@ -184,310 +170,287 @@ public class Connect4 {
 		return board;
 	}
 
-	public static int checkFinish() {
+	public static int checkFinish(int b) {
 		int AIs = 0;
 		int Humans=0;
+		if(b==1) {
+			for(int row=2; row>=0;row--) {
+				for(int col=0; col<=2;col++) {
 
-		for(int row=2; row>=0;row--) {
-			for(int col=0; col<=2;col++) {
+					if(board[row][col]=='.') {
+						continue;
+					}
 
-				if(board[row][col]=='.') {
-					continue;
-				}
-
-				//check right
-				if(col==0) {
-					for(int x=0; x<3;x++) {
-						if(board[row][x]=='O') {
-							AIs++;
-						}else if(board[row][x]=='X') {
-							Humans++;
+					//check right
+					if(col==0) {
+						for(int x=0; x<3;x++) {
+							if(board[row][x]=='O') {
+								AIs++;
+							}else if(board[row][x]=='X') {
+								Humans++;
+							}
 						}
-					}
 
-					if(AIs==3) {
-						return -1;
-					}else if(Humans==3) {
-						return 1;
-					}
-
-					AIs=0; Humans=0;
-				}
-
-
-				//check up
-				if(row==0) {
-					for(int x=0;x<3;x++) {
-						if(board[x][col]=='O') {
-							AIs++;
-						}else if(board[x][col]=='X') {
-							Humans++;
+						if(AIs==3) {
+							return 1;
+						}else if(Humans==3) {
+							return 2;
 						}
+
+						AIs=0; Humans=0;
 					}
 
-					if(AIs==3) {
-						return -1;
-					}else if(Humans==3) {
-						return 1;
-					}
-					AIs=0; Humans=0;
-				}
 
-
-				//	check diagonal right
-
-				if(col==0 && row==2) {
-					for(int x=0; x<3;x++) {
-						if(board[row-x][col+x]=='O') {
-							AIs++;
-						}else if(board[row-x][col+x]=='X') {
-							Humans++;
+					//check up
+					if(row==0) {
+						for(int x=0;x<3;x++) {
+							if(board[x][col]=='O') {
+								AIs++;
+							}else if(board[x][col]=='X') {
+								Humans++;
+							}
 						}
-					}
-					if(AIs==3) {
-						return -1;
-					}else if(Humans==3) {
-						return 1;
-					}
-					AIs=0; Humans=0;	
-				}
 
-				//check diagonal left
-				if(col==2 && row==2) {
-					for(int x=0; x<3;x++) {
-						if(board[row-x][col-x]=='O') {
-							AIs++;
-						}else if(board[row-x][col-x]=='X') {
-							Humans++;
+						if(AIs==3) {
+							return 1;
+						}else if(Humans==3) {
+							return 2;
 						}
+						AIs=0; Humans=0;
 					}
-					if(AIs==3) {
-						return -1;
-					}else if(Humans==3) {
-						return 1;
+
+
+					//	check diagonal right
+
+					if(col==0 && row==2) {
+						for(int x=0; x<3;x++) {
+							if(board[row-x][col+x]=='O') {
+								AIs++;
+							}else if(board[row-x][col+x]=='X') {
+								Humans++;
+							}
+						}
+						if(AIs==3) {
+							return 1;
+						}else if(Humans==3) {
+							return 2;
+						}
+						AIs=0; Humans=0;	
 					}
-					AIs=0; Humans=0;
+
+					//check diagonal left
+					if(col==2 && row==2) {
+						for(int x=0; x<3;x++) {
+							if(board[row-x][col-x]=='O') {
+								AIs++;
+							}else if(board[row-x][col-x]=='X') {
+								Humans++;
+							}
+						}
+						if(AIs==3) {
+							return 1;
+						}else if(Humans==3) {
+							return 2;
+						}
+						AIs=0; Humans=0;
+					}
+
 				}
 
 			}
 
-		}
-
-		for(int j=0;j<3;j++){
-			//Game has not ended yet
-			if(board[0][j]=='.') {
-				return 0;
+			for(int j=0;j<3;j++){
+				//Game has not ended yet
+				if(board[0][j]=='.') {
+					return -1;
+				}
 			}
 		}
 
+
+		if(b==2) {
+			for(int i=5; i>=0;i--) {
+				for(int j=0; j<=6; j++) {
+					if(board[i][j]=='.') {
+						continue;
+					}
+					//check right 
+					if(j<=3) {
+						for(int x=0; x<4;x++) {
+							if(board[i][x+j]=='O') {
+								AIs++;
+							}else if(board[i][x+j]=='X') {
+								Humans++;
+							}
+						}	
+						if(AIs==4) {
+							return 1;
+						}else if(Humans==4) {
+							return 2;
+						}
+						AIs=0; Humans=0;
+					}
+
+					//check up 
+					if(i<=2) {
+						for(int x=0;x<4;x++) {
+							if(board[i+x][j]=='O') {
+								AIs++;
+							}else if(board[x+i][j]=='X') {
+								Humans++;
+							}
+						}
+						if(AIs==4) {
+							return 1;
+						}else if(Humans==4) {
+							return 2;
+						}
+						AIs=0; Humans=0;
+					}
+
+
+					//	check diagonal right
+					if(j<=3 && i>=4) {
+						for(int x=0; x<4;x++) {
+							if(board[i-x][j+x]=='O') {
+								AIs++;
+							}else if(board[i-x][j+x]=='X') {
+								Humans++;
+							}
+						}
+						if(AIs==4) {
+							return 1;
+						}else if(Humans==4) {
+							return 2;
+						}
+						AIs=0; Humans=0;	
+					}
+
+					//check diagonal left
+					if(j>=3 && i>=4) {
+						for(int x=0; x<4;x++) {
+							if(board[i-x][j-x]=='O') {
+								AIs++;
+							}else if(board[i-x][j-x]=='X') {
+								Humans++;
+							}
+						}
+						if(AIs==4) {
+							return 1;
+						}else if(Humans==4) {
+							return 2;
+						}
+						AIs=0; Humans=0;
+					}
+
+				}
+
+			}
+
+			for(int j=0;j<7;j++){
+				if(board[0][j]=='.') { 
+					return -1; 
+				}
+			} 
+		}
 		return 0;
 
 	}
 
 
-	public static int checkFinish2() {
-		int AIs = 0;
-		int Humans=0;
-		for(int i=5; i>=0;i--) {
-			for(int j=0; j<=6; j++) {
-				if(board[i][j]=='.') {
-					continue;
-				}
-				//check right 
-				if(j<=3) {
-					for(int x=0; x<4;x++) {
-						if(board[i][x+j]=='O') {
-							AIs++;
-						}else if(board[i][x+j]=='X') {
-							Humans++;
-						}
-					}	
-					if(AIs==4) {
-						return 1;
-					}else if(Humans==4) {
-						return 2;
-					}
-					AIs=0; Humans=0;
-				}
+	public static boolean utility() {
 
-				//check up 
-				if(i<=2) {
-					for(int x=0;x<4;x++) {
-						if(board[i+x][j]=='O') {
-							AIs++;
-						}else if(board[x+i][j]=='X') {
-							Humans++;
-						}
-					}
-					if(AIs==4) {
-						return 1;
-					}else if(Humans==4) {
-						return 2;
-					}
-					AIs=0; Humans=0;
-				}
-
-
-				//	check diagonal right
-				if(j<=3 && i>=4) {
-					for(int x=0; x<4;x++) {
-						if(board[i-x][j+x]=='O') {
-							AIs++;
-						}else if(board[i-x][j+x]=='X') {
-							Humans++;
-						}
-					}
-					if(AIs==4) {
-						return 1;
-					}else if(Humans==4) {
-						return 2;
-					}
-					AIs=0; Humans=0;	
-				}
-
-				//check diagonal left
-				if(j>=3 && i>=4) {
-					for(int x=0; x<4;x++) {
-						if(board[i-x][j-x]=='O') {
-							AIs++;
-						}else if(board[i-x][j-x]=='X') {
-							Humans++;
-						}
-					}
-					if(AIs==4) {
-						return 1;
-					}else if(Humans==4) {
-						return 2;
-					}
-					AIs=0; Humans=0;
-				}
-
-			}
-
+		int r=checkFinish(1);
+		if(r==1) {
+			System.out.println("AI wins");
+			return true;
+		}else if(r==2) {
+			System.out.println("Human wins");
+			return true;
+		}else if(count==9) {
+			System.out.println("It's a Tie!");
+			return true;	
 		}
-
-		for(int j=0;j<7;j++){
-			if(board[0][j]=='.') { 
-				return -1; 
-			}
-		} 
-
-		return 0;
-
+		return false;
 	}
 
+	public static boolean utility2() {
 
-	public static void play() {
+		int r=checkFinish(2);
+		if(r==1) {
+			System.out.println("AI wins");
+			return true;
+		}else if(r==2) {
+			System.out.println("Human wins");
+			return true;
+		}else if(count==42) {
+			System.out.println("It's a Tie!");
+			return true;	
+		}
+		return false;
+	}
 
-		while(true) {
-			System.out.println("player 1's col");
-			int y=scan.nextInt();
-			Action(y);
-			printboard();
-			checkFinish();
-			int r=checkFinish();
-			if(r==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==9) {
-				System.out.println("It's a Tie!");
-				break;
+	public static void play(int b) {
+		if(b==1) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				randomAction();
+				printboard();
+				if(utility()) {
+					break;
+				}
 			}
-			System.out.println("2's col");
-
-			randomAction();
-			printboard();
-			int r2=checkFinish();
-			if(r2==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r2==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==9) {
-				System.out.println("It's a Tie!");
-				break;
+		}
+		if(b==2) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility2()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				randomAction();
+				printboard();
+				if(utility2()) {
+					break;
+				}
 			}
 		}
 	}
 
 
-	public static void play2() {
-
-		while(true) {
-			System.out.println("player 1's col");
-			int y=scan.nextInt();
-			Action(y);
-			printboard();
-			checkFinish();
-			int r=checkFinish2();
-			if(r==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==42) {
-				System.out.println("It's a Tie!");
-				break;
-			}
-			System.out.println("2's col");
-			randomAction();
-			printboard();
-			int r2=checkFinish2();
-			if(r2==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r2==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==42) {
-				System.out.println("It's a Tie!");
-				break;
+	public static void playminimax(int b) {
+		if(b==1) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				//minimax....
+				//randomAction();
+				printboard();
+				if(utility()) {
+					break;
+				}
 			}
 		}
 	}
 
 
-	public static void play3() {
 
-		while(true) {
-			System.out.println("player 1's col");
-			int y=scan.nextInt();
-			Action(y);
-			printboard();
-			checkFinish();
-			int r=checkFinish();
-			if(r==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==9) {
-				System.out.println("It's a Tie!");
-				break;
-			}
-			System.out.println("2's col");
-			//这边我随便写的，不能这么写
-			action1(minimaxab(board, 1));
-			printboard();
-			int r2=checkFinish();
-			if(r2==1) {
-				System.out.println("Player 2 wins");
-				break;
-			}else if(r2==2) {
-				System.out.println("Player 1 wins");
-				break;
-			}else if(count==9) {
-				System.out.println("It's a Tie!");
-				break;
-			}
-		}
-	}
 
 	public static void main(String[] args) {
 		Scanner scan= new Scanner(System.in);
@@ -498,33 +461,34 @@ public class Connect4 {
 		int boardSize=scan.nextInt();
 
 		System.out.println("Choose your opponent:");
-		System.out.println("1. An agent that plays randomly\n" + 
+		System.out.println("0.测试"+
+				"1. An agent that plays randomly\n" + 
 				"2. An agent that uses MINIMAX\n" + 
 				"3. An agent that uses MINIMAX with alpha-beta pruning\n" + 
 				"4. An agent that uses H-MINIMAX with a fixed depth cutoff");
 		System.out.println("Your choice?");
 		int opponent =scan.nextInt();
 
-		//play Random on board 3*3
+		//play Random on Tiny board 3*3人机
 		if(boardSize==1 && opponent==1) {
 			Connect4 game= new Connect4(3,3);
 			game.printboard();
-			game.play();
+			game.play(1);
 		}
 
-		//play  minimax on board 3*3
 		if(boardSize==1 && opponent==2) {
 			Connect4 game= new Connect4(3,3);
 			game.printboard();
-			game.play3();
+			game.playminimax(1);
 		}
-
-		//play Random on board 6*7
-		if(boardSize==2 && opponent==1) {
+		if(boardSize==2 && opponent==1) {//6*7人机
 			Connect4 game= new Connect4(6,7);
 			game.printboard();
-			game.play2();
+			game.play(2);
 		}
+
+
+
 
 	}
 }
