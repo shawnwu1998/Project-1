@@ -56,8 +56,6 @@ public class Connect4 {
 
 	}
 
-
-
 	//random player
 	public static void randomAction() {
 
@@ -450,8 +448,6 @@ public class Connect4 {
 	}
 
 
-
-
 	public static void main(String[] args) {
 		Scanner scan= new Scanner(System.in);
 		System.out.println("Please choose your game");
@@ -469,23 +465,52 @@ public class Connect4 {
 		System.out.println("Your choice?");
 		int opponent =scan.nextInt();
 
-		//play Random on Tiny board 3*3人机
-		if(boardSize==1 && opponent==1) {
+		if(boardSize==1) {
 			Connect4 game= new Connect4(3,3);
-			game.printboard();
-			game.play(1);
+			switch(opponent){
+			case 1:
+				game.printboard();
+				game.play(1);
+				break;
+			case 2:
+				game.printboard();
+				game.playminimax(1);
+				break;
+			case 3:
+				game.printboard();
+			//	game.playminimaxab(1);
+				break;
+			case 4:
+				game.printboard();
+			//	game.playhminimax(1);
+				break;
+			}
+			
 		}
-
-		if(boardSize==1 && opponent==2) {
-			Connect4 game= new Connect4(3,3);
-			game.printboard();
-			game.playminimax(1);
-		}
-		if(boardSize==2 && opponent==1) {//6*7人机
+		if(boardSize==2) {
 			Connect4 game= new Connect4(6,7);
-			game.printboard();
-			game.play(2);
+			switch(opponent){
+			case 1:
+				game.printboard();
+				game.play(2);
+				break;
+			case 2:
+				game.printboard();
+				game.playminimax(2);
+				break;
+			case 3:
+				game.printboard();
+			//	game.playminimaxab(2);
+				break;
+			case 4:
+				game.printboard();
+			//	game.playhminimax(2);
+				break;
+			}
+			
 		}
+		
+		
 
 
 
