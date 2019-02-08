@@ -92,13 +92,34 @@ public class Connect4 {
 	}
 
 
-	
 	public static int Search() {
 		
+		ArrayList<Integer> totalmoves= new ArrayList<Integer>();
+		ArrayList<Integer> index = new ArrayList<Integer>();
+		int best=Integer.MAX_VALUE;
+		int move=-1;
+		int num=-1;
+		for(int i=0; i<board[0].length; i++) {
+			if(rowAvailable(i)) {
+				board=drop(i, 'O');
+				move=minimax(board, 'X');
+				totalmoves.add(move);
+				index.add(i);
+				System.out.println(move+" ");
+				board=clear(i);
+				if(move < best){
+					best=move;
+					num=i;
+				System.out.println("move"+move);
+				System.out.println("num"+num);
+				}
+			}
+		}
+		return num;
 		
-		return 0;
-		
+
 	}
+	
 	
 	
 	public static int getMin(ArrayList<Integer> moves){
@@ -126,11 +147,12 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {			
 				if(rowAvailable(i)) {
 					board=drop(i, 'X');	
-				//	printboard();
+					
 					bestMax = Math.max(minimax(board,'O'), bestMax);
-				//	System.out.println("s"+bestMax);
+					printboard();
+					System.out.println("s"+bestMax);
 					board = clear(i);
-				//	printboard();
+					printboard();
 				}
 			}
 			return bestMax;
@@ -142,7 +164,7 @@ public class Connect4 {
 				//	printboard();
 					bestMIN = Math.min(minimax(board,'X'), bestMIN);
 					board = clear(i);
-				//	System.out.println("m"+bestMIN);
+					System.out.println("m"+bestMIN);
 			//		printboard();
 				}
 			}
@@ -452,7 +474,7 @@ public class Connect4 {
 				}
 				System.out.println("AI's turn");
 				int col=Search();
-				//drop(col,'X');
+			//	System.out.println(minimax(board,'O'));
 				board=drop(col,'O');
 				printboard();
 				if(utility()) {
