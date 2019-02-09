@@ -92,8 +92,8 @@ public class Connect4 {
 	}
 
 
-	public static int Search() {
-		
+	public static int Search(int b) {
+
 		ArrayList<Integer> totalmoves= new ArrayList<Integer>();
 		ArrayList<Integer> index = new ArrayList<Integer>();
 		int best=Integer.MAX_VALUE;
@@ -102,26 +102,43 @@ public class Connect4 {
 		for(int i=0; i<board[0].length; i++) {
 			if(rowAvailable(i)) {
 				board=drop(i, 'O');
-				move=minimax(board, 'X');
+				if(b==1) {
+				move=minimax(board, 'X',0);
+				}else if(b==2) {
+				move=minimaxab(board, 'X', 0,Integer.MIN_VALUE, Integer.MAX_VALUE);
+				}
 				totalmoves.add(move);
 				index.add(i);
-				System.out.println(move+" ");
 				board=clear(i);
 				if(move < best){
 					best=move;
 					num=i;
-				System.out.println("move"+move);
-				System.out.println("num"+num);
 				}
 			}
 		}
+		System.out.println();
+		//for random if moves have many best value**
+		int min = getMin(totalmoves);
+		ArrayList<Integer> index2 = new ArrayList<Integer>();
+		for(int i = 0 ; i < totalmoves.size() ; i++){
+			if(totalmoves.get(i) == min){
+				index2.add(index.get(i));
+			}
+		}
+		if(index2.size() > 1){
+			Random rd = new Random();
+			do
+				num = index2.get(rd.nextInt(index2.size()));
+			while(!rowAvailable(num));
+		}
+
 		return num;
-		
+
 
 	}
-	
-	
-	
+
+
+
 	public static int getMin(ArrayList<Integer> moves){
 		int min = Integer.MAX_VALUE;
 		for(int i = 0; i < moves.size() ; i++){
@@ -131,28 +148,54 @@ public class Connect4 {
 		}
 		return min;
 	}
-	
-	
-	public static int minimax (char board[][], char player) {
-		int r=checkFinish(1);
-		if(r==1) {
-			return r;
-		}if(r==-1) {
-			return r;
-		}if(count==9) {
-			return 0;
+
+
+	public static boolean isboard() {
+		if(row==3 & col==3) {
+			return true;
+		}else if(row==6 & col==7) {
+			return false;
 		}
+		return false;
+	}
+	public static int minimax (char board[][], char player, int depth) {
+		if(isboard()) {
+			System.out.println("hhhhhhhh");
+			int r=checkFinish(1);
+			if(r==10000) {
+				return r-depth;
+			}if(r==-10000) {
+				return r+depth;
+			}if(count==9) {
+				return 0;
+			}if(depth>8) {
+				return r;
+			}
+		}
+		if(!isboard()) {
+			System.out.println("hhhhhhhh");
+			int r=checkFinish(2);
+			if(r==10000) {
+				return r-depth;
+			}if(r==-10000) {
+				return r+depth;
+			}if(count==42) {
+				return 0;
+			}if(depth>8) {
+				return r;
+			}
+		}
+
 		if(player=='X') {
 			int bestMax=Integer.MIN_VALUE;		
 			for(int i=0; i<board[0].length; i++) {			
 				if(rowAvailable(i)) {
 					board=drop(i, 'X');	
-					
-					bestMax = Math.max(minimax(board,'O'), bestMax);
-					printboard();
-					System.out.println("s"+bestMax);
+					//		printboard();
+					bestMax = Math.max(minimax(board,'O',depth+1), bestMax);	
+				//	System.out.println("s"+bestMax);
 					board = clear(i);
-					printboard();
+					//	printboard();
 				}
 			}
 			return bestMax;
@@ -161,11 +204,72 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {
 				if(rowAvailable(i)) {
 					board=drop(i,'O');	
-				//	printboard();
-					bestMIN = Math.min(minimax(board,'X'), bestMIN);
+					//		printboard();
+					bestMIN = Math.min(minimax(board,'X',depth+1), bestMIN);
 					board = clear(i);
-					System.out.println("m"+bestMIN);
-			//		printboard();
+				//	System.out.println("m"+bestMIN);
+					//		printboard();
+				}
+			}
+			return bestMIN;
+		}
+	}
+
+	public static int minimaxab (char board[][], char player, int depth, int alpha, int beta) {
+		
+		if(isboard()) {
+			int r=checkFinish(1);
+			if(r==10000) {
+				return r-depth;
+			}if(r==-10000) {
+				return r+depth;
+			}if(count==9) {
+				return 0;
+			}if(depth>8) {
+				return r;
+			}
+		}
+		if(!isboard()) {
+			int r=checkFinish(2);
+			if(r==10000) {
+				return r-depth;
+			}if(r==-10000) {
+				return r+depth;
+			}if(count==42) {
+				return 0;
+			}if(depth>8) {
+				return r;
+			}
+		}
+		if(player=='X') {
+			int bestMax=Integer.MIN_VALUE;		
+			for(int i=0; i<board[0].length; i++) {			
+				if(rowAvailable(i)) {
+					board=drop(i, 'X');	
+					//		printboard();
+					bestMax = Math.max(minimaxab(board,'O',depth+1, alpha, beta), bestMax);	
+					//	System.out.println("s"+bestMax);
+					board = clear(i);
+					alpha = Math.max(alpha,bestMax);
+					if(beta <= alpha)
+						return bestMax;
+					//	printboard();
+				}
+			}
+			return bestMax;
+		}else{
+			int bestMIN=Integer.MAX_VALUE;
+			for(int i=0; i<board[0].length; i++) {
+				if(rowAvailable(i)) {
+					board=drop(i,'O');	
+					//		printboard();
+					bestMIN = Math.min(minimaxab(board,'X',depth+1,alpha, beta), bestMIN);
+					board = clear(i);
+					//	System.out.println("m"+bestMIN);
+					//		printboard();
+					beta = Math.min(beta, bestMIN);
+					if(beta <= alpha)
+						return bestMIN;
 				}
 			}
 			return bestMIN;
@@ -208,6 +312,7 @@ public class Connect4 {
 	public static int checkFinish(int b) {
 		int AIs = 0;
 		int Humans=0;
+		int points=0;
 		if(b==1) {
 			for(int row=2; row>=0;row--) {
 				for(int col=0; col<=2;col++) {
@@ -220,18 +325,33 @@ public class Connect4 {
 						for(int x=0; x<3;x++) {
 							if(board[row][x]=='O') {
 								AIs++;
+
 							}else if(board[row][x]=='X') {
 								Humans++;
+
+
 							}
 						}
 
 						if(AIs==3) {
-							return -1;
+							return -10000;
 						}else if(Humans==3) {
-							return 1;
+							return 10000;
 						}
-
+						if(AIs==2) {
+							points-=100;
+						}
+						if(Humans==2) {
+							points+=100;
+						}
+						if(AIs==1) {
+							points-=50;
+						}
+						if(Humans==1) {
+							points+=50;
+						}
 						AIs=0; Humans=0;
+
 					}
 
 
@@ -246,10 +366,24 @@ public class Connect4 {
 						}
 
 						if(AIs==3) {
-							return -1;
+							return -10000;
 						}else if(Humans==3) {
-							return 1;
+							return 10000;
 						}
+						if(AIs==2) {
+							points-=100;
+						}
+						if(Humans==2) {
+							points+=100;
+						}
+						if(AIs==1) {
+							points-=50;
+						}
+						if(Humans==1) {
+							points+=50;
+						}
+
+
 						AIs=0; Humans=0;
 					}
 
@@ -265,10 +399,22 @@ public class Connect4 {
 							}
 						}
 						if(AIs==3) {
-							return -1;
+							return -10000;
 						}else if(Humans==3) {
-							return 1;
+							return 10000;
 						}
+						if(AIs==2) {
+							points-=100;
+						}
+						if(Humans==2) {
+							points+=100;
+						}
+						if(AIs==1) {
+							points-=50;
+						}if(Humans==1) {
+							points+=50;
+						}
+
 						AIs=0; Humans=0;	
 					}
 
@@ -282,10 +428,21 @@ public class Connect4 {
 							}
 						}
 						if(AIs==3) {
-							return -1;
+							return -10000;
 						}else if(Humans==3) {
-							return 1;
+							return 10000;
 						}
+						if(AIs==2) {
+							points-=100;
+						}
+						if(Humans==2) {
+							points+=100;
+						}if(AIs==1) {
+							points-=50;
+						}if(Humans==1) {
+							points+=50;
+						}
+
 						AIs=0; Humans=0;
 					}
 
@@ -318,9 +475,20 @@ public class Connect4 {
 							}
 						}	
 						if(AIs==4) {
-							return -1;
+							return -10000;
 						}else if(Humans==4) {
-							return 1;
+							return 10000;
+						}
+						if(AIs==3) {
+							points-=100;
+						}else if(Humans==3) {
+							points+= 100;
+						}
+						if(AIs==2) {
+							points-=50;
+						}
+						if(Humans==2) {
+							points+=50;
 						}
 						AIs=0; Humans=0;
 					}
@@ -335,9 +503,20 @@ public class Connect4 {
 							}
 						}
 						if(AIs==4) {
-							return -1;
+							return -10000;
 						}else if(Humans==4) {
-							return 1;
+							return 10000;
+						}
+						if(AIs==3) {
+							points-=100;
+						}else if(Humans==3) {
+							points+= 100;
+						}
+						if(AIs==2) {
+							points-=50;
+						}
+						if(Humans==2) {
+							points+=50;
 						}
 						AIs=0; Humans=0;
 					}
@@ -353,9 +532,20 @@ public class Connect4 {
 							}
 						}
 						if(AIs==4) {
-							return -1;
+							return -10000;
 						}else if(Humans==4) {
-							return 1;
+							return 10000;
+						}
+						if(AIs==3) {
+							points-=100;
+						}else if(Humans==3) {
+							points+= 100;
+						}
+						if(AIs==2) {
+							points-=50;
+						}
+						if(Humans==2) {
+							points+=50;
 						}
 						AIs=0; Humans=0;	
 					}
@@ -370,9 +560,20 @@ public class Connect4 {
 							}
 						}
 						if(AIs==4) {
-							return -1;
+							return -10000;
 						}else if(Humans==4) {
-							return 1;
+							return 10000;
+						}
+						if(AIs==3) {
+							points-=100;
+						}else if(Humans==3) {
+							points+= 100;
+						}
+						if(AIs==2) {
+							points-=50;
+						}
+						if(Humans==2) {
+							points+=50;
 						}
 						AIs=0; Humans=0;
 					}
@@ -387,18 +588,19 @@ public class Connect4 {
 				}
 			} 
 		}
-		return 0;
+		return points;
 
 	}
+
 
 
 	public static boolean utility() {
 
 		int r=checkFinish(1);
-		if(r==-1) {
+		if(r==-10000) {
 			System.out.println("AI wins");
 			return true;
-		}else if(r==1) {
+		}else if(r==10000) {
 			System.out.println("Human wins");
 			return true;
 		}else if(count==9) {
@@ -411,10 +613,10 @@ public class Connect4 {
 	public static boolean utility2() {
 
 		int r=checkFinish(2);
-		if(r==-1) {
+		if(r==-10000) {
 			System.out.println("AI wins");
 			return true;
-		}else if(r==1) {
+		}else if(r==10000) {
 			System.out.println("Human wins");
 			return true;
 		}else if(count==42) {
@@ -473,8 +675,8 @@ public class Connect4 {
 					break;
 				}
 				System.out.println("AI's turn");
-				int col=Search();
-			//	System.out.println(minimax(board,'O'));
+				int col=Search(1);
+				//	System.out.println(minimax(board,'O'));
 				board=drop(col,'O');
 				printboard();
 				if(utility()) {
@@ -482,8 +684,64 @@ public class Connect4 {
 				}
 			}
 		}
+		if(b==2) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility2()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				int col=Search(1);
+				board=drop(col,'O');
+				printboard();
+				if(utility2()) {
+					break;
+				}
+			}
+		}
 	}
 
+	public static void playminimaxab(int b) {
+		if(b==1) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				int col=Search(2);
+				board=drop(col,'O');
+				printboard();
+				if(utility()) {
+					break;
+				}
+			}
+		}
+		if(b==2) {
+			while(true) {
+				System.out.println("Human's turn");
+				int y=scan.nextInt();
+				Action(y);
+				printboard();
+				if(utility2()) {
+					break;
+				}
+				System.out.println("AI's turn");
+				int col=Search(2);
+				board=drop(col,'O');
+				printboard();
+				if(utility2()) {
+					break;
+				}
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		Scanner scan= new Scanner(System.in);
@@ -514,7 +772,7 @@ public class Connect4 {
 				break;
 			case 3:
 				game.printboard();
-				//	game.playminimaxab(1);
+				game.playminimaxab(1);
 				break;
 			case 4:
 				game.printboard();
@@ -538,7 +796,7 @@ public class Connect4 {
 				break;
 			case 3:
 				game.printboard();
-				//	game.playminimaxab(2);
+				game.playminimaxab(2);
 				break;
 			case 4:
 				game.printboard();
