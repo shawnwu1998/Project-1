@@ -586,45 +586,61 @@ public class Connect4 {
 
 	public static void human() {
 		System.out.println("Human's turn");
+		long start = System.currentTimeMillis();
 		int y=scan.nextInt();
 		Action(y);
 		printboard();
+		long end = System.currentTimeMillis();
+		System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
 	}
 
 
 	public static void AI(int k) {
+		long start;
+		long end;
 		System.out.println("AI's turn");
 		switch (k) {
 		case 1:
+			start = System.currentTimeMillis();
 			randomAction();
 			printboard();
-			//	System.out.println("AI's choice: "+randCol);
+			end = System.currentTimeMillis();
+			System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
+//			System.out.println("AI's choice: "+randCol);
 			break;
 		case 2:
+			start = System.currentTimeMillis();
 			int col=Search(1);
 			board=drop(col,'O');
 			printboard();
 			System.out.println("AI's choice: "+ col);
+			end = System.currentTimeMillis();
+			System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
 			break;
 		case 3:
+			start = System.currentTimeMillis();
 			int coln=Search(2);
 			board=drop(coln,'O');
 			printboard();
 			System.out.println("AI's choice: "+ coln);
+			end = System.currentTimeMillis();
+			System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
 			break;
 		} 
 	}
 
 
-	public static void play(int b,int choice) {
+	public static void play(int choice) {
 
-		if(b==1) {
+		if(isboard()) {
+			
 			switch(choice) {
 			case 1:
 				while(true) {
 					human();
 					if(utility()) break;
 					AI(1);
+					
 					if(utility()) break;
 				}
 				break;
@@ -637,9 +653,11 @@ public class Connect4 {
 				}
 				break;
 			}
+			
+			
 		}
 
-		if(b==2) {
+		if(!isboard()) {
 			switch(choice) {
 			case 1:
 				while(true) {
@@ -657,14 +675,14 @@ public class Connect4 {
 					if(utility2()) break;
 				}
 				break;
-			}	
+			}
 		}
 
 	}
 
 
-	public static void playminimax(int b, int choice) {
-		if(b==1) {
+	public static void playminimax(int choice) {
+		if(isboard()) {
 			switch(choice) {
 			case 1:
 				while(true) {
@@ -685,7 +703,7 @@ public class Connect4 {
 			}	
 		}
 
-		if(b==2) {
+		if(!isboard()) {
 			switch(choice) {
 			case 1:
 				while(true) {
@@ -708,8 +726,8 @@ public class Connect4 {
 	}
 
 
-	public static void playminimaxab(int b,int choice) {
-		if(b==1) {
+	public static void playminimaxab(int choice) {
+		if(isboard()) {
 			switch(choice) {
 			case 1:
 				while(true) {
@@ -730,7 +748,7 @@ public class Connect4 {
 			}	
 		}
 
-		if(b==2) {
+		if(!isboard()) {
 			switch(choice) {
 			case 1:
 				while(true) {
@@ -770,7 +788,9 @@ public class Connect4 {
 		int opponent =scan.nextInt();
 		System.out.println("Do you want to play first or second? 1--first, 2--second");
 		int turn =scan.nextInt();
-		System.out.println("Please choose your depth limit: 0--8 ");
+		System.out.println("Please choose your level: ");
+		System.out.println("  1--------------8");
+		System.out.println("hard           easy");
 		depth=scan.nextInt();
 		long start = System.currentTimeMillis();
 		if(boardSize==1) {
@@ -778,15 +798,15 @@ public class Connect4 {
 			switch(opponent){
 			case 1:
 				game.printboard();
-				game.play(1,turn);
+				game.play(turn);
 				break;
 			case 2:
 				game.printboard();
-				game.playminimax(1,turn);
+				game.playminimax(turn);
 				break;
 			case 3:
 				game.printboard();
-				game.playminimaxab(1,turn);
+				game.playminimaxab(turn);
 				break;
 			case 4:
 				game.printboard();
@@ -799,15 +819,15 @@ public class Connect4 {
 			switch(opponent){
 			case 1:
 				game.printboard();
-				game.play(2,turn);
+				game.play(turn);
 				break;
 			case 2:
 				game.printboard();
-				game.playminimax(2,turn);
+				game.playminimax(turn);
 				break;
 			case 3:
 				game.printboard();
-				game.playminimaxab(2,turn);
+				game.playminimaxab(turn);
 				break;
 			case 4:
 				game.printboard();
@@ -816,7 +836,7 @@ public class Connect4 {
 			}
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("The time spent is " + (end - start) + " milliseconds.");
+		System.out.println("The total time spent is " + (end - start)*0.001 + " seconds.");
 	}
 
 
