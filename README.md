@@ -374,7 +374,7 @@ public class Connect4 {
 								Humans++;
 							}
 						}
-					
+
 						switch(AIs) {
 						case 1:points-=50;break;
 						case 2:points-=100;break;
@@ -403,7 +403,7 @@ public class Connect4 {
 						}else if(Humans==3) {
 							return 10000;
 						}
-						
+
 						switch(AIs) {
 						case 1:points-=50;break;
 						case 2:points-=100;break;
@@ -519,7 +519,7 @@ public class Connect4 {
 						case 3:points+=100;break;
 						case 4:return 10000;
 						}
-						
+
 						AIs=0; Humans=0;
 					}
 
@@ -548,8 +548,8 @@ public class Connect4 {
 		}
 		return false;
 	}
-	
-	
+
+
 	public static boolean utility() {//3*3*3
 
 		int r=checkFinish(1);
@@ -598,7 +598,7 @@ public class Connect4 {
 		case 1:
 			randomAction();
 			printboard();
-		//	System.out.println("AI's choice: "+randCol);
+			//	System.out.println("AI's choice: "+randCol);
 			break;
 		case 2:
 			int col=Search(1);
@@ -617,7 +617,7 @@ public class Connect4 {
 
 
 	public static void play(int b,int choice) {
-		
+
 		if(b==1) {
 			switch(choice) {
 			case 1:
@@ -627,7 +627,7 @@ public class Connect4 {
 					AI(1);
 					if(utility()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(1);
@@ -635,10 +635,10 @@ public class Connect4 {
 					human();
 					if(utility()) break;
 				}
-			break;
+				break;
 			}
 		}
-		
+
 		if(b==2) {
 			switch(choice) {
 			case 1:
@@ -648,7 +648,7 @@ public class Connect4 {
 					AI(1);
 					if(utility2()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(1);
@@ -656,10 +656,10 @@ public class Connect4 {
 					human();
 					if(utility2()) break;
 				}
-			break;
+				break;
 			}	
 		}
-		
+
 	}
 
 
@@ -673,7 +673,7 @@ public class Connect4 {
 					AI(2);
 					if(utility()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(2);
@@ -681,10 +681,10 @@ public class Connect4 {
 					human();
 					if(utility()) break;
 				}
-			break;
+				break;
 			}	
 		}
-		
+
 		if(b==2) {
 			switch(choice) {
 			case 1:
@@ -694,7 +694,7 @@ public class Connect4 {
 					AI(2);
 					if(utility2()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(2);
@@ -702,7 +702,7 @@ public class Connect4 {
 					human();
 					if(utility2()) break;
 				}
-			break;
+				break;
 			}	
 		}
 	}
@@ -718,7 +718,7 @@ public class Connect4 {
 					AI(3);
 					if(utility()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(3);
@@ -726,10 +726,10 @@ public class Connect4 {
 					human();
 					if(utility()) break;
 				}
-			break;
+				break;
 			}	
 		}
-		
+
 		if(b==2) {
 			switch(choice) {
 			case 1:
@@ -739,7 +739,7 @@ public class Connect4 {
 					AI(3);
 					if(utility2()) break;
 				}
-			break;
+				break;
 			case 2:
 				while(true) {
 					AI(3);
@@ -747,7 +747,7 @@ public class Connect4 {
 					human();
 					if(utility2()) break;
 				}
-			break;
+				break;
 			}	
 		}
 	}
@@ -772,6 +772,7 @@ public class Connect4 {
 		int turn =scan.nextInt();
 		System.out.println("Please choose your depth limit: 0--8 ");
 		depth=scan.nextInt();
+		long start = System.currentTimeMillis();
 		if(boardSize==1) {
 			Connect4 game= new Connect4(3,3);
 			switch(opponent){
@@ -792,7 +793,6 @@ public class Connect4 {
 				// game.playhminimax(1);
 				break;
 			}
-
 		}
 		if(boardSize==2) {
 			Connect4 game= new Connect4(6,7);
@@ -815,6 +815,8 @@ public class Connect4 {
 				break;
 			}
 		}
+		long end = System.currentTimeMillis();
+		System.out.println("The time spent is " + (end - start) + " milliseconds.");
 	}
 
 
