@@ -10,7 +10,7 @@ public class Connect4 {
 	static Scanner scan= new Scanner(System.in);
 	static int randCol;
 
-	
+
 	//constructor, to store the board, its rows and columns
 	public Connect4 (int rows, int cols) {
 		this.row=rows;
@@ -24,6 +24,7 @@ public class Connect4 {
 		}
 	}
 
+	
 	//to print the board
 	public static void printboard() {
 		System.out.println("---------------------");
@@ -41,20 +42,23 @@ public class Connect4 {
 		}
 	}
 
+	
 	//This function applies to when human inputs 'X'
 	public static void Action(int column) {
-
 		for(int bottomrow =row-1;bottomrow>0;bottomrow--){
 			if(board[bottomrow][column]=='.') {
+				//it is first in this column
 				board[bottomrow][column]='X';
 				break;
 			}else if(board[0][column]!='.') {
+				//check if column is full
 				System.out.println("This column is full, try again");
 				System.out.println("Player 1 try again");
 				int r=scan.nextInt();
 				Action(r);
 				break;
-			}if((board[bottomrow][column]=='X' || board[bottomrow][column]=='O') && board[bottomrow-1][column]=='.') {
+			}else if((board[bottomrow][column]=='X' || board[bottomrow][column]=='O') && board[bottomrow-1][column]=='.') {
+				//there is sth below it
 				board[bottomrow-1][column]='X';
 				break;
 			}
@@ -63,6 +67,7 @@ public class Connect4 {
 
 	}
 
+	
 	//This function is for AI to make random choices
 	public static void randomAction() {
 
@@ -81,10 +86,12 @@ public class Connect4 {
 					//do another round
 					break;
 				}else if((board[bottomrow][randCol]=='X' || board[bottomrow][randCol]=='O') && board[bottomrow-1][randCol]=='.') {
+					//sth below it
 					board[bottomrow-1][randCol]='O';
 					cycle = false;
 					break;
 				}else if(board[bottomrow][randCol]=='.') {
+					// first in the column
 					board[bottomrow][randCol]='O';
 					cycle = false; 
 					break;
@@ -95,8 +102,7 @@ public class Connect4 {
 
 	}
 
-
-
+	
 	//This function is to search the best utility value and returns the best column choice for AI
 	//If moves have many best values, it will make random choices
 	public static int Search(int b) {
@@ -116,8 +122,8 @@ public class Connect4 {
 				}else if(b==3) {
 					move=hminimax(board, 'X', depth,0);
 				}
-				totalmoves.add(move);
-				index.add(i);
+				totalmoves.add(move);//store all possible h-minimax result
+				index.add(i);//add into index
 				board=clear(i);
 				if(move < best){
 					best=move;
@@ -127,14 +133,15 @@ public class Connect4 {
 		}
 		System.out.println();
 
-		int min = getMin(totalmoves);
+		int min = getMin(totalmoves);//get the best move
+		
 		ArrayList<Integer> m = new ArrayList<Integer>();
 		for(int i = 0 ; i < totalmoves.size() ; i++){
 			if(totalmoves.get(i) == min){
 				m.add(index.get(i));
 			}
 		}
-		if(m.size() > 1){
+		if(m.size() > 1){//more than 1 best choice, randomly choose one
 			Random n = new Random();
 			if(!rowAvailable(num)) {
 				num = m.get(n.nextInt(m.size()));
@@ -150,6 +157,7 @@ public class Connect4 {
 	public static int getMin(ArrayList<Integer> moves){
 		int min = Integer.MAX_VALUE;
 		for(int i = 0; i < moves.size() ; i++){
+			//go through all number and return the smallest one
 			if(moves.get(i) < min){
 				min = moves.get(i);
 			}
@@ -157,6 +165,7 @@ public class Connect4 {
 		return min;
 	}
 
+	
 	//boolean to check which board it is
 	public static boolean isboard() {
 		if(row==3 & col==3) {
@@ -167,6 +176,7 @@ public class Connect4 {
 		return false;
 	}
 
+	
 	//check the terminal states
 	public static int checkFinish(int b) {
 		int AIs = 0;
@@ -178,7 +188,8 @@ public class Connect4 {
 						continue;
 					}
 
-					//check right
+					//check right 
+					//how many similar sign are continuous if we count from left to right
 					if(col==0) {
 						for(int x=0; x<3;x++) {
 							if(board[row][x]=='O') {
@@ -188,9 +199,9 @@ public class Connect4 {
 							}
 						}
 
-						if(AIs==3) {
+						if(AIs==3) {//when AI win
 							return -10000;
-						}else if(Humans==3) {
+						}else if(Humans==3) {//when Human win
 							return 10000;
 						}
 
@@ -354,12 +365,13 @@ public class Connect4 {
 
 	}
 
-	//This is a function to evaluate the board based on favorablenss for the heuristic
+	
+	//This is a function to evaluate the board based on favorableness for the heuristic
 	//Iterate through each possible line to sum up the goodness and badness of the score
 	public static int evaluation(int b) {
 		int AIs = 0;
 		int Humans=0;
-		int points=0;
+		int points=0;//the heuristic at different situation
 		if(b==1) {//for the 3*3 board
 			for(int row=2; row>=0;row--) {
 				for(int col=0; col<=2;col++) {
@@ -377,14 +389,14 @@ public class Connect4 {
 							}
 						}
 						switch(AIs) {
-						case 1:points-=50;break;
-						case 2:points-=100;break;
-						case 3:return -10000;
+						case 1:points-=50;break;//1 O
+						case 2:points-=100;break;//2 O
+						case 3:return -10000;//AI able to win
 						}
 						switch(Humans) {
-						case 1:points+=50;break;
-						case 2:points+=100;break;
-						case 3:return 10000;
+						case 1:points+=50;break;// 1 X
+						case 2:points+=100;break;// 2 X
+						case 3:return 10000;//human able to win
 						}
 						AIs=0; Humans=0;
 					}
@@ -590,7 +602,7 @@ public class Connect4 {
 
 	//This is the minimax function, which checks the terminal states and returns utility value
 	public static int minimax (char board[][], char player) {
-		if(isboard()) {
+		if(isboard()) {//3*3
 			int r=checkFinish(1);
 			if(r==10000) {
 				return r;
@@ -600,7 +612,7 @@ public class Connect4 {
 				return 0;
 			}
 		}
-		if(!isboard()) {
+		if(!isboard()) {//6*7
 			int r=checkFinish(2);
 			if(r==10000) {
 				return r;
@@ -616,7 +628,7 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {   
 				if(rowAvailable(i)) {
 					board=drop(i, 'X'); 
-					bestMax = Math.max(minimax(board,'O'), bestMax); 
+					bestMax = Math.max(minimax(board,'O'), bestMax); //change max
 					board=clear(i);
 				}
 			}
@@ -626,7 +638,7 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {
 				if(rowAvailable(i)) {
 					board=drop(i,'O'); 
-					bestMIN = Math.min(minimax(board,'X'), bestMIN);
+					bestMIN = Math.min(minimax(board,'X'), bestMIN);//change min
 					board=clear(i);
 				}
 			}
@@ -634,11 +646,12 @@ public class Connect4 {
 		}
 	}
 
+	
 	//This is the minimax function with alpha and beta values
 	//It basically follows the same logic of minimax except that it will returns alpha and beta values for MAX and MIN to limit the search
 	public static int minimaxab (char board[][], char player, int alpha, int beta) {
 
-		if(isboard()) {
+		if(isboard()) {//3*3
 			int r=checkFinish(1);
 			if(r==10000) {
 				return r-depth;
@@ -648,7 +661,7 @@ public class Connect4 {
 				return 0;
 			}
 		}
-		if(!isboard()) {
+		if(!isboard()) {//6*7
 			int r=checkFinish(2);
 			if(r==10000) {
 				return r-depth;
@@ -664,9 +677,9 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {   
 				if(rowAvailable(i)) {
 					board=drop(i, 'X'); 
-					bestMax = Math.max(minimaxab(board,'O', alpha, beta), bestMax); 
+					bestMax = Math.max(minimaxab(board,'O', alpha, beta), bestMax); //change max
 					board = clear(i);
-					alpha = Math.max(alpha,bestMax);
+					alpha = Math.max(alpha,bestMax); //get new alpha
 					if(beta <= alpha)
 						return bestMax;
 				}
@@ -677,9 +690,9 @@ public class Connect4 {
 			for(int i=0; i<board[0].length; i++) {
 				if(rowAvailable(i)) {
 					board=drop(i,'O'); 
-					bestMIN = Math.min(minimaxab(board,'X',alpha, beta), bestMIN);
+					bestMIN = Math.min(minimaxab(board,'X',alpha, beta), bestMIN);//change min
 					board = clear(i);
-					beta = Math.min(beta, bestMIN);
+					beta = Math.min(beta, bestMIN);//get new beta
 					if(beta <= alpha)
 						return bestMIN;
 				}
@@ -688,9 +701,10 @@ public class Connect4 {
 		}
 	}
 
+	
 	//This is the H-minimax function, which chooses optimal moves based on the evaluation function
 	public static int hminimax (char board[][], char player, int depth, int currentdepth) {
-		if(isboard()) {
+		if(isboard()) {//3*3 check heuristic with depth
 			int r=evaluation(1);
 			if(r==10000) {
 				return r-depth;
@@ -698,11 +712,11 @@ public class Connect4 {
 				return r+depth;
 			}if(!spaceAvailable()) {
 				return 0;
-			}if(currentdepth>depth) {
+			}if(currentdepth>depth) {//check depth
 				return r;
 			}
 		}
-		if(!isboard()) {
+		if(!isboard()) {//6*7
 			int r=evaluation(2);
 			if(r==10000) {
 				return r-depth;
@@ -750,6 +764,7 @@ public class Connect4 {
 		return board;
 	}
 
+	
 	//to clear all the possible positions
 	public static char[][] clear(int k){
 		for(int i = 0 ; i < board.length ; i++){
@@ -775,6 +790,7 @@ public class Connect4 {
 		return false;
 	}
 
+	
 	//boolean function to check if there is any space left at the whole board
 	public static boolean spaceAvailable() {
 		for(int i=0; i<board.length; i++) {
@@ -787,6 +803,7 @@ public class Connect4 {
 		return false;
 	}
 
+	
 	//corresponds the utility values to the results
 	//for the 3*3 board
 	public static boolean utility() {
@@ -829,7 +846,7 @@ public class Connect4 {
 		int y=scan.nextInt();
 		Action(y);
 		printboard();
-		long end = System.currentTimeMillis();
+		long end = System.currentTimeMillis();//check time human use
 		System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
 	}
 
@@ -838,7 +855,7 @@ public class Connect4 {
 		long start;
 		long end;
 		System.out.println("AI's turn");
-		switch (k) {
+		switch (k) {//which searching strategy AI will use
 		case 1:
 			start = System.currentTimeMillis();
 			randomAction();
@@ -880,11 +897,11 @@ public class Connect4 {
 	//random play
 	public static void play(int choice) {
 
-		if(isboard()) {
+		if(isboard()) {//3*3
 
 			switch(choice) {
 			case 1:
-				while(true) {
+				while(true) {//human first
 					human();
 					if(utility()) break;
 					AI(1);
@@ -893,7 +910,7 @@ public class Connect4 {
 				}
 				break;
 			case 2:
-				while(true) {
+				while(true) {//AI first
 					AI(1);
 					if(utility()) break;
 					human();
@@ -905,10 +922,10 @@ public class Connect4 {
 
 		}
 
-		if(!isboard()) {
+		if(!isboard()) {//6*7
 			switch(choice) {
 			case 1:
-				while(true) {
+				while(true) {//human first
 					human();
 					if(utility2()) break;
 					AI(1);
@@ -916,7 +933,7 @@ public class Connect4 {
 				}
 				break;
 			case 2:
-				while(true) {
+				while(true) {//AI first
 					AI(1);
 					if(utility2()) break;
 					human();
@@ -1071,7 +1088,7 @@ public class Connect4 {
 		System.out.println("1. Tiny 3X3X3 Connect-Three");
 		System.out.println("2. Standard 6X7X4 Connect-Four");
 		System.out.println("Your choice?");
-		int boardSize=scan.nextInt();
+		int boardSize=scan.nextInt();//check which board to use
 		System.out.println("Choose your opponent:");
 		System.out.println(
 				"1. An agent that plays randomly\n" + 
@@ -1079,9 +1096,9 @@ public class Connect4 {
 						"3. An agent that uses MINIMAX with alpha-beta pruning\n" + 
 				"4. An agent that uses H-MINIMAX with a fixed depth cutoff");
 		System.out.println("Your choice?");
-		int opponent =scan.nextInt();
+		int opponent =scan.nextInt();//check which searching strategy player choose for AI to use
 		System.out.println("Do you want to play first or second? 1--first, 2--second");
-		int turn =scan.nextInt();
+		int turn =scan.nextInt();//play first or second
 
 		long start = System.currentTimeMillis();
 		if(boardSize==1) {
@@ -1142,4 +1159,5 @@ public class Connect4 {
 	public static void main(String[] args) {
 		start();
 	}
+	
 }
