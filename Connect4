@@ -9,7 +9,9 @@ public class Connect4 {
 	static Random rand = new Random();
 	static Scanner scan= new Scanner(System.in);
 	static int randCol;
+
 	
+	//constructor, to store the board, its rows and columns
 	public Connect4 (int rows, int cols) {
 		this.row=rows;
 		this.col=cols;
@@ -22,7 +24,7 @@ public class Connect4 {
 		}
 	}
 
-
+	//to print the board
 	public static void printboard() {
 		System.out.println("---------------------");
 		for(int i=0; i<row;i++) {
@@ -39,7 +41,7 @@ public class Connect4 {
 		}
 	}
 
-
+	//This function applies to when human inputs 'X'
 	public static void Action(int column) {
 
 		for(int bottomrow =row-1;bottomrow>0;bottomrow--){
@@ -61,8 +63,9 @@ public class Connect4 {
 
 	}
 
+	//This function is for AI to make random choices
+	public static void randomAction() {
 
-	public static void randomAction() {//random player
 		randCol = rand.nextInt(col);
 		//will return a number of 0, 1, 2
 		//will represent Player 2, and use symbol "O"
@@ -72,7 +75,7 @@ public class Connect4 {
 		while(cycle == true) {
 
 			for(int bottomrow =row-1;bottomrow>0;bottomrow--){
-				
+
 				if(board[0][randCol]!='.') {
 					//do nothing
 					//do another round
@@ -92,8 +95,8 @@ public class Connect4 {
 
 	}
 
-	
-	
+
+
 	//This function is to search the best utility value and returns the best column choice for AI
 	//If moves have many best values, it will make random choices
 	public static int Search(int b) {
@@ -123,7 +126,7 @@ public class Connect4 {
 			}
 		}
 		System.out.println();
-		
+
 		int min = getMin(totalmoves);
 		ArrayList<Integer> m = new ArrayList<Integer>();
 		for(int i = 0 ; i < totalmoves.size() ; i++){
@@ -142,7 +145,7 @@ public class Connect4 {
 
 	}
 
-	
+
 	//This function is to  get the minimum value among the moves
 	public static int getMin(ArrayList<Integer> moves){
 		int min = Integer.MAX_VALUE;
@@ -584,9 +587,8 @@ public class Connect4 {
 
 	}
 
-	
+
 	//This is the minimax function, which checks the terminal states and returns utility value
-	//If it's Max player, 
 	public static int minimax (char board[][], char player) {
 		if(isboard()) {
 			int r=checkFinish(1);
@@ -686,6 +688,7 @@ public class Connect4 {
 		}
 	}
 
+	//This is the H-minimax function, which chooses optimal moves based on the evaluation function
 	public static int hminimax (char board[][], char player, int depth, int currentdepth) {
 		if(isboard()) {
 			int r=evaluation(1);
@@ -734,7 +737,7 @@ public class Connect4 {
 			return bestMIN;
 		}
 	}
-	
+
 
 	//for AI to drop the piece
 	public static char[][] drop(int column, char player) {
@@ -760,18 +763,18 @@ public class Connect4 {
 
 
 	//boolean function to check if there is any space left at every row
-		public static boolean rowAvailable(int x) {
-			for(int i=0; i<board.length; i++) {
-				if(board[i][x]=='.') {
-					return true;
-				}
+	public static boolean rowAvailable(int x) {
+		for(int i=0; i<board.length; i++) {
+			if(board[i][x]=='.') {
+				return true;
 			}
-			if(x<0 || x>= board[0].length) {
-				return false;
-			}
+		}
+		if(x<0 || x>= board[0].length) {
 			return false;
 		}
-		
+		return false;
+	}
+
 	//boolean function to check if there is any space left at the whole board
 	public static boolean spaceAvailable() {
 		for(int i=0; i<board.length; i++) {
@@ -818,7 +821,8 @@ public class Connect4 {
 		return false;
 	}
 
-
+	//When human takes an action
+	//the time is also calculated
 	public static void human() {
 		System.out.println("Human's turn");
 		long start = System.currentTimeMillis();
@@ -829,7 +833,7 @@ public class Connect4 {
 		System.out.println("Time spent: " + (end - start)*0.001 + " seconds.");
 	}
 
-
+	//When AI takes an action
 	public static void AI(int k) {
 		long start;
 		long end;
@@ -873,18 +877,18 @@ public class Connect4 {
 		} 
 	}
 
-
+	//random play
 	public static void play(int choice) {
 
 		if(isboard()) {
-			
+
 			switch(choice) {
 			case 1:
 				while(true) {
 					human();
 					if(utility()) break;
 					AI(1);
-					
+
 					if(utility()) break;
 				}
 				break;
@@ -897,8 +901,8 @@ public class Connect4 {
 				}
 				break;
 			}
-			
-			
+
+
 		}
 
 		if(!isboard()) {
@@ -924,7 +928,7 @@ public class Connect4 {
 
 	}
 
-
+	//minimax play
 	public static void playminimax(int choice) {
 		if(isboard()) {
 			switch(choice) {
@@ -969,7 +973,7 @@ public class Connect4 {
 		}
 	}
 
-
+	//minimax alpha beta play
 	public static void playminimaxab(int choice) {
 		if(isboard()) {
 			switch(choice) {
@@ -1014,7 +1018,7 @@ public class Connect4 {
 		}
 	}
 
-
+	//H-minimax play
 	public static void playhminimax(int choice) {
 		if(isboard()) {
 			switch(choice) {
@@ -1057,9 +1061,10 @@ public class Connect4 {
 				break;
 			}	
 		}
-	
+
 	}
-	
+
+	//To start the game
 	public static void start() {
 		Scanner scan= new Scanner(System.in);
 		System.out.println("Please choose your game");
@@ -1077,7 +1082,7 @@ public class Connect4 {
 		int opponent =scan.nextInt();
 		System.out.println("Do you want to play first or second? 1--first, 2--second");
 		int turn =scan.nextInt();
-		
+
 		long start = System.currentTimeMillis();
 		if(boardSize==1) {
 			Connect4 game= new Connect4(3,3);
