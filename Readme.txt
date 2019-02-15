@@ -10,4 +10,6 @@ How to run the program:
 
 How we built the program:
   We first built the board system on which the connect4 games can be played between two players.
-  We then constructed RANDOM method which allows the computer to randomly drop a chess piece on the board. Then we constructed MINIMAX, MINIMAX with alpha beta pruning and H-MINIMAX as the methods the computer uses to drop a piece. Meanwhile, we also constructed a scoring system, which allows the computer to make the optimal move based on the score of each position on the board. For MINIMAX and MINIMAX with alpha beta pruning, it takes significant amount of time for AI to find best moves for 6*7 board. Other than that, it plays well and quickly.
+  We then constructed RANDOM method which allows the computer to randomly drop a chess piece on the board. Then we constructed MINIMAX, MINIMAX with alpha beta pruning and H-MINIMAX as the methods the computer uses to drop a piece. Meanwhile, we also constructed a scoring system, which allows the computer to make the optimal move based on the score of each position on the board. 
+  
+  For MINIMAX and MINIMAX with alpha beta pruning, it takes significant amount of time for AI to find best moves for 6*7 board. Other than that, it plays well and quickly.
